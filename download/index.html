@@ -8,6 +8,15 @@
   <meta name="description" content="Open WatchBack GainMore on Google Play.">
   <title>Opening Google Play | WatchBack GainMore</title>
   <link rel="icon" type="image/png" href="../app-icon.png">
+  <!-- Google tag from the existing website's Analytics setup email. -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-47T0YQELWQ"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    // Send one page view below so navigation can follow its completion callback.
+    gtag('config', 'G-47T0YQELWQ', {send_page_view: false});
+  </script>
   <noscript>
     <meta http-equiv="refresh" content="0;url=https://play.google.com/store/apps/details?id=com.watchback.gainmore">
   </noscript>
@@ -36,8 +45,26 @@
     <a class="home" href="../">Visit developer website</a>
   </main>
   <script>
-    // Keep this destination fixed; URL parameters cannot change the redirect.
-    window.location.replace("https://play.google.com/store/apps/details?id=com.watchback.gainmore");
+    (function () {
+      var redirected = false;
+      var fallbackTimer;
+      function openGooglePlay() {
+        if (redirected) return;
+        redirected = true;
+        window.clearTimeout(fallbackTimer);
+        // Keep the destination fixed; incoming URL parameters cannot change it.
+        window.location.replace("https://play.google.com/store/apps/details?id=com.watchback.gainmore");
+      }
+      // Continue even if Analytics is blocked or takes too long to load.
+      fallbackTimer = window.setTimeout(openGooglePlay, 1500);
+      gtag('event', 'page_view', {
+        send_to: 'G-47T0YQELWQ',
+        page_title: document.title,
+        page_location: window.location.href,
+        event_callback: openGooglePlay,
+        event_timeout: 1000
+      });
+    }());
   </script>
 </body>
 </html>
